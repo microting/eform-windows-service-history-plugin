@@ -81,8 +81,78 @@ namespace WindowsServiceHistoryPlugin
                 }
             }
 
+            sdkCore.CaseDelete(trigger.CheckListId, trigger.SiteUId);
 
-            //throw new NotImplementedException();
+            eFormData.MainElement eform = sdkCore.TemplateRead(trigger.CheckListId);
+            SetDefaultValue(eform.ElementList, caseFieldValues);
+
+            sdkCore.CaseCreate(eform, "", trigger.SiteUId);
+        }
+
+        public void SetDefaultValue(List<eFormData.Element> elementLst, List<eFormData.FieldValue> fieldValues)
+        {
+            foreach (eFormData.Element element in elementLst)
+            {
+                if (element.GetType() == typeof(eFormData.DataElement))
+                {
+                    eFormData.DataElement dataE = (eFormData.DataElement)element;
+                    foreach(eFormData.DataItem item in dataE.DataItemList)
+                    {
+                        if (item.GetType() == typeof(eFormData.NumberStepper))
+                        {
+                            eFormData.NumberStepper numberStepper = (eFormData.NumberStepper)item;
+                            foreach (eFormData.FieldValue fv in fieldValues)
+                            {
+                                if (fv.FieldId == item.Id)
+                                {
+                                    numberStepper.DefaultValue = int.Parse(fv.Value);
+                                }
+                            }
+
+                        }
+                        if (item.GetType() == typeof(eFormData.Number))
+                        {
+                            eFormData.Number numberStepper = (eFormData.Number)item;
+                            foreach (eFormData.FieldValue fv in fieldValues)
+                            {
+                                if (fv.FieldId == item.Id)
+                                {
+                                    numberStepper.DefaultValue = int.Parse(fv.Value);
+                                }
+                            }
+
+                        }
+                        if (item.GetType() == typeof(eFormData.Comment))
+                        {
+                            eFormData.Comment comment = (eFormData.Comment)item;
+                            foreach (eFormData.FieldValue fv in fieldValues)
+                            {
+                                if (fv.FieldId == item.Id)
+                                {
+                                    comment.Value = fv.Value;
+                                }
+                            }
+
+                        }
+                        if (item.GetType() == typeof(eFormData.Text))
+                        {
+                            eFormData.Text text = (eFormData.Text)item;
+                            foreach (eFormData.FieldValue fv in fieldValues)
+                            {
+                                if (fv.FieldId == item.Id)
+                                {
+                                    text.Value = fv.Value;
+                                }
+                            }
+
+                        }
+                    }
+                } else
+                {
+                    eFormData.GroupElement groupElement = (eFormData.GroupElement)element;
+                    SetDefaultValue(groupElement.ElementList, fieldValues);
+                }
+            }
         }
 
         public void CaseDeleted(object sender, EventArgs args)
