@@ -194,7 +194,7 @@ namespace WindowsServiceHistoryPlugin
         {
             try
             {
-                string connectionString = File.ReadAllText(serviceLocation + @"\Extensions\OutlookPlugin\sql_connection_outlook.txt").Trim();
+                string connectionString = File.ReadAllText(serviceLocation + @"\Plugins\HistoryPlugin\sql_connection_history.txt").Trim();
                 if (!coreAvailable && !coreStatChanging)
                 {
                     this.serviceLocation = serviceLocation;
