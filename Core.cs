@@ -62,31 +62,34 @@ namespace WindowsServiceHistoryPlugin
         {
             eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
             List<fields> fields = sqlController.FieldsOnCheckList(trigger.CheckListId);
-            List<eFormData.FieldValue> caseFieldValues = new List<eFormData.FieldValue>();
-            if (sqlController.CheckListRead(trigger.CheckListId) != null)
+            if (fields != null)
             {
-                List<eFormShared.Field_Dto> eFormFields = sdkCore.Advanced_TemplateFieldReadAll(trigger.CheckListId);
-                List<int> field_ids = new List<int>();
-                foreach (eFormShared.Field_Dto f in eFormFields)
+                List<eFormData.FieldValue> caseFieldValues = new List<eFormData.FieldValue>();
+                if (sqlController.CheckListRead(trigger.CheckListId) != null)
                 {
-                    field_ids.Add(f.Id);
-                }
-                foreach (fields field in fields)
-                {
-                    if (field_ids.Contains(field.id))
+                    List<eFormShared.Field_Dto> eFormFields = sdkCore.Advanced_TemplateFieldReadAll(trigger.CheckListId);
+                    List<int> field_ids = new List<int>();
+                    foreach (eFormShared.Field_Dto f in eFormFields)
                     {
-                        eFormData.FieldValue fv =  sdkCore.Advanced_FieldValueReadList(field.id, 1)[0];
-                        caseFieldValues.Add(fv);
+                        field_ids.Add(f.Id);
+                    }
+                    foreach (fields field in fields)
+                    {
+                        if (field_ids.Contains(field.id))
+                        {
+                            eFormData.FieldValue fv = sdkCore.Advanced_FieldValueReadList(field.id, 1)[0];
+                            caseFieldValues.Add(fv);
+                        }
                     }
                 }
+
+                sdkCore.CaseDelete(trigger.CheckListId, trigger.SiteUId);
+
+                eFormData.MainElement eform = sdkCore.TemplateRead(trigger.CheckListId);
+                SetDefaultValue(eform.ElementList, caseFieldValues);
+
+                sdkCore.CaseCreate(eform, "", trigger.SiteUId);
             }
-
-            sdkCore.CaseDelete(trigger.CheckListId, trigger.SiteUId);
-
-            eFormData.MainElement eform = sdkCore.TemplateRead(trigger.CheckListId);
-            SetDefaultValue(eform.ElementList, caseFieldValues);
-
-            sdkCore.CaseCreate(eform, "", trigger.SiteUId);
         }
 
         public void SetDefaultValue(List<eFormData.Element> elementLst, List<eFormData.FieldValue> fieldValues)
