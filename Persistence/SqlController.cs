@@ -392,7 +392,6 @@ namespace HistorySql
 
     public enum Settings
     {
-        firstRunDone,
         logLevel,
         logLimit,
         microtingDb,
