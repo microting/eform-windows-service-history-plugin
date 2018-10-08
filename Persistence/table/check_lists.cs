@@ -26,6 +26,8 @@
 
         public int? sdk_check_list_id { get; set; }
 
+        public int? reset_values_field_id { get; set; } // If this field is filled, skip field_values for other fields.
+
         public virtual ICollection<fields> fields { get; set; }
     }
 }

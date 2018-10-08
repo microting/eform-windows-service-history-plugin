@@ -258,7 +258,7 @@ namespace HistorySql
         {
             using (var db = GetContext())
             {
-                return db.Check_lists.SingleOrDefault(x => x.id == id);
+                return db.Check_lists.SingleOrDefault(x => x.sdk_check_list_id == id);
             }
         }
 

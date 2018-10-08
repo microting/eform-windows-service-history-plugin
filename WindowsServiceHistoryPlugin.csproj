@@ -45,6 +45,10 @@
     <Compile Include="Installers\RebusHandleInstaller.cs" />
     <Compile Include="Installers\RebusInstaller.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Migrations\201810051211468_AddingResetValuesFieldId.cs" />
+    <Compile Include="Migrations\201810051211468_AddingResetValuesFieldId.Designer.cs">
+      <DependentUpon>201810051211468_AddingResetValuesFieldId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\201809270944157_AddingAdditionalModels.cs" />
     <Compile Include="Persistence\Migrations\201809270944157_AddingAdditionalModels.Designer.cs">
       <DependentUpon>201809270944157_AddingAdditionalModels.cs</DependentUpon>
@@ -77,6 +81,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201810051211468_AddingResetValuesFieldId.resx">
+      <DependentUpon>201810051211468_AddingResetValuesFieldId.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Persistence\Migrations\201809270944157_AddingAdditionalModels.resx">
       <DependentUpon>201809270944157_AddingAdditionalModels.cs</DependentUpon>
     </EmbeddedResource>

@@ -61,7 +61,8 @@ namespace WindowsServiceHistoryPlugin
         public void CaseCompleted(object sender, EventArgs args)
         {
             eFormShared.Case_Dto trigger = (eFormShared.Case_Dto)sender;
-            List<fields> fields = sqlController.FieldsOnCheckList(trigger.CheckListId);
+            check_lists check_list = sqlController.CheckListRead(trigger.CheckListId);
+            List<fields> fields = sqlController.FieldsOnCheckList(check_list.id);
             if (fields != null)
             {
                 List<eFormData.FieldValue> caseFieldValues = new List<eFormData.FieldValue>();
@@ -75,10 +76,22 @@ namespace WindowsServiceHistoryPlugin
                     }
                     foreach (fields field in fields)
                     {
-                        if (field_ids.Contains(field.id))
+                        if (field_ids.Contains((int)field.sdk_field_id))
                         {
-                            eFormData.FieldValue fv = sdkCore.Advanced_FieldValueReadList(field.id, 1)[0];
+                            eFormData.FieldValue fv = sdkCore.Advanced_FieldValueReadList((int)field.sdk_field_id, 1)[0];
                             caseFieldValues.Add(fv);
+                        }
+                    }
+                }
+
+                bool shouldSkipValues = false;
+                foreach(eFormData.FieldValue fv in caseFieldValues)
+                {
+                    if (fv.FieldId == check_list.reset_values_field_id)
+                    {
+                        if (fv.Value == "checked")
+                        {
+                            shouldSkipValues = true;
                         }
                     }
                 }
@@ -86,7 +99,10 @@ namespace WindowsServiceHistoryPlugin
                 sdkCore.CaseDelete(trigger.CheckListId, trigger.SiteUId);
 
                 eFormData.MainElement eform = sdkCore.TemplateRead(trigger.CheckListId);
-                SetDefaultValue(eform.ElementList, caseFieldValues);
+                if (shouldSkipValues)
+                {
+                    SetDefaultValue(eform.ElementList, caseFieldValues);
+                }
 
                 sdkCore.CaseCreate(eform, "", trigger.SiteUId);
             }
