@@ -99,7 +99,7 @@ namespace WindowsServiceHistoryPlugin
                 sdkCore.CaseDelete(trigger.CheckListId, trigger.SiteUId);
 
                 eFormData.MainElement eform = sdkCore.TemplateRead(trigger.CheckListId);
-                if (shouldSkipValues)
+                if (!shouldSkipValues)
                 {
                     SetDefaultValue(eform.ElementList, caseFieldValues);
                 }
