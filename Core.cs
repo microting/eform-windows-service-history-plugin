@@ -104,6 +104,7 @@ namespace WindowsServiceHistoryPlugin
                     SetDefaultValue(eform.ElementList, caseFieldValues);
                 }
 
+                eform.EndDate = DateTime.Now.AddYears(1);
                 sdkCore.CaseCreate(eform, "", trigger.SiteUId);
             }
         }
